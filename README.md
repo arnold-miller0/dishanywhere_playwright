@@ -1,4 +1,9 @@
 # dishanywhere_playwright
+
+### TODO via similar typescript repo
+- update locators to have tags not just via id, class, attributes
+- Models and BDD tests check copyright and version via API response
+
 ## Checks DishAnyWhere home via Playwright python-pytest
 - Footer's copyright year and release version
 - Search finds specific network, shows, movies
