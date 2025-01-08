@@ -1,21 +1,27 @@
 # dishanywhere_playwright
 
-Python version 3.12.4
-
-## Requires to install 
-- Given install python and pip
-- pytest
-  - `pip install pytest`
-- pytest_bdd 
-   - `pip install pytest_bdd`
-- playwright python
-  - `pip install --upgrade pip`
-  - `pip install playwright`
-  - `playwright install`
 
 ### TODO via similar typescript repo
 - update locators to have tags not just via id, class, attributes
 - Models and BDD tests check copyright and version via API response
+
+**Python version 3.12.4**
+## Requires to install 
+### Given installed python and pip
+- `python 3.12.4`
+- `pip 24.3.1`
+### upgrade pip
+- `pip install --upgrade pip`
+### install pytest
+- `pip install pytest`
+### install pytest-html
+- `pip install pytest-html`
+### install pytest_bdd 
+- `pip install pytest_bdd`
+### install playwright
+- `pip install playwright`
+- `playwright install`
+
 
 ## Checks DishAnyWhere home via Playwright python-pytest
 - Footer's copyright **year and release version** via Config API
@@ -26,12 +32,16 @@ Python version 3.12.4
 
 ## Tested via progress better style parts
 - Part 1: Direct linear tests for Web and API
-  - win11: `python -m pytest .\tests\part_1_direct\`
+  - winOS11: `python -m pytest .\tests\part_1_direct\`
+    - html: `python -m pytest --html=reports/part_1_report.html .\tests\part_1_direct\ `
 - Part 2: Use Web page, Web carousel and API Models
-  - win11: `python -m pytest .\tests\part_2_models\`
+  - winOS11: `python -m pytest .\tests\part_2_models\`
+    - html: `python -m pytest .\tests\part_2_models\ --html=reports/part_2_report.html`
 - Part 3: BDD Feature Scenario using Part 2's Models
-  - win11: `python -m pytest .\tests\part_3_bdd_normal\step_defs\`
+  - winOS11: `python -m pytest .\tests\part_3_bdd_normal\step_defs\`
+    - html: `python -m pytest .\tests\part_3_bdd_normal\ --html=reports/part_3_report.html`
 - Part 4: BDD Feature Outline using Part 2' Models
-  - win11: `python -m pytest .\tests\part_4_bdd_outline\step_defs\`
+  - winOS11: `python -m pytest .\tests\part_4_bdd_outline\step_defs\`
+    - html: `python -m pytest .\tests\part_4_bdd_outline\ --html=reports/part_4_report.html`
 
 ## DONE

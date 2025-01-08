@@ -1,18 +1,31 @@
-from playwright.sync_api import Page, expect, Locator
+import pytest
+from typing import Generator
+from playwright.sync_api import Page, expect, Locator, Playwright, APIRequestContext 
 from tests.Models.carsousel_promos import CarouselItem, PromosItem
 
+
+@pytest.fixture(scope="session")
+def web_request_context(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+    request_context = playwright.request.new_context(
+        # base_url is same as DishPage base url
+        base_url="https://www.dishanywhere.com/"
+    )
+    yield request_context
+    request_context.dispose()
 
 class DishPage:
     def __init__(self, page: Page):
         self._base_url = "https://www.dishanywhere.com/"
+        self._web_env = "production"
 
         self._page = page
-        self._version = page.locator("#footer-copyright-text")
-        self._search = page.locator("#search-icon")
-        self._close = page.locator("#close-icon")
-        self._most_carousel = self._page.locator("#carousel-item").nth(0)
-        self._avail_carousel = self._page.locator("#carousel-item").nth(1)
-        self._promos_list = self._avail_carousel.locator(".carousel").nth(1)
+        self._version = self._page.locator("span#footer-copyright-text")
+        self._search = self._page.locator("img#search-icon")
+        self._close = self._page.locator("svg#close-icon")
+        self._results = self._page.locator('div#search-results-container')
+        self._most_carousel = self._page.locator("div#carousel-item").nth(0)
+        self._avail_carousel = self._page.locator("div#carousel-item").nth(1)
+        self._promos_list = self._avail_carousel.locator("div.carousel").nth(1)
 
         # carousel and promos display list max items
         self._list_display_max = 14
@@ -20,50 +33,79 @@ class DishPage:
         # DISH Home URL Title
         self._dish_url_title = "DISH Anywhere"
 
-    def set_browser_size(self, width:int, height: int):
+        # Dish Config Env, Version
+        self._cfg_env = "None"
+        self._cfg_ver = "00.0.0"
+
+    def set_browser_size(self, width:int, height: int) -> None:
         self._page.set_viewport_size({"width": width, "height": height})
 
-    def navigate(self):
+    def navigate(self) -> None:
         self._page.goto(self._base_url)
 
     def check_title(self,
                     title: str):
         expect(self._page).to_have_title(title)
 
-    def get_base_url(self):
+    def get_base_url(self) -> str:
         return self._base_url
 
-    def get_url(self):
+    def get_url(self)  -> str:
         return self._page.url
 
     def search_text(self,
-                    text: str):
+                    text: str) -> None:
         self._search.click()
-        self._page.fill("#search-input", text)
+        self._page.fill("input#search-input", text)
 
     def find_id_text(self,
                      id_attr: str,
-                     text: str):
-        find = self._page.locator("#" + id_attr)
+                     text: str) -> None:
+        find = self._results.locator("a#" + id_attr)
         expect(find).to_have_text(text)
 
-    def close_search(self):
+    def close_search(self) -> None:
         self._close.click()
 
-    def get_web_most_carousel(self):
+    def get_web_most_carousel(self) -> Locator:
         return self._most_carousel
 
-    def get_web_most_list(self):
-        return self._most_carousel.locator("#card-container")
+    def get_web_most_list(self) -> Locator:
+        return self._most_carousel.locator("div#card-container")
 
     def get_web_avail_carousel(self) -> Locator:
         return self._avail_carousel
 
     def get_web_avail_list(self) -> Locator:
-        return self.get_web_avail_carousel().locator("div").nth(0).locator("#card-container")
+        return self.get_web_avail_carousel().locator("div").nth(0).locator("div#card-container")
 
     def get_web_promos_list(self) -> Locator:
         return self._promos_list.locator("#banner-card")
+
+
+    def set_config_env_version(self,
+                             web_request_context: APIRequestContext,
+                             debug=False) -> None:
+        url = "health/config_check"
+        params = None
+        headers = None
+        response = web_request_context.get(url, params=params, headers=headers)
+        assert response.ok
+        dataJson = response.json()
+        self._cfg_env = dataJson.get('env')
+        branchJson = dataJson.get('git').get('branch')
+        self._cfg_ver = branchJson.replace("-",".")
+        if debug:
+            print(f" web Config env: {self._cfg_env}; version: {self._cfg_ver}")
+    
+    def get_config_env(self) -> str: 
+        return self._cfg_env
+    
+    def get_web_env(self) -> str: 
+        return self._web_env
+    
+    def get_config_version(self) -> str:
+        return self._cfg_ver
 
     def check_copyright_version(self,
                                 year: int,

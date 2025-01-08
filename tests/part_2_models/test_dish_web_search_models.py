@@ -1,21 +1,18 @@
 
 from playwright.sync_api import Page
+# import fixure 'web_request_context'
 from tests.Models.dishanyweb import DishPage
+from tests.part_2_models.help_dish_web_methods import given_dish_home
 
 
-def test_title_url_search_version(page: Page) -> None:
+def test_title_url_search(
+        page: Page
+    ) -> None:
     # Given the DishAnyWhere home page is displayed
 
     dish_home = DishPage(page)
-
-    dish_home.navigate()
-
-    # Then Dish web page has its title
-    dish_home.check_dish_title()
-
-    # Then Dish web page url has ../home
-    dish_home.check_dish_url_home()
-
+    given_dish_home(dish_home)
+    
     # Given Search 'cBs'
     dish_home.search_text('cBs')
 
@@ -26,10 +23,5 @@ def test_title_url_search_version(page: Page) -> None:
 
     # Then close the search
     dish_home.close_search()
-
-    # Then Dish home page copyright has year and version
-    year = 2024
-    version = "24.3.6"
-    dish_home.check_copyright_version(year, version)
 
     pass

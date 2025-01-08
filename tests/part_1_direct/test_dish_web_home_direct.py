@@ -1,5 +1,19 @@
-
+import pytest
+from typing import Generator
+from playwright.sync_api import Playwright, APIRequestContext
 from playwright.sync_api import expect, Page
+from datetime import datetime
+
+dish_base_url = 'https://www.dishanywhere.com/'
+
+@pytest.fixture(scope="session")
+def api_request_context(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+
+    request_context = playwright.request.new_context(
+        base_url=dish_base_url
+    )
+    yield request_context
+    request_context.dispose()
 
 
 def check_carousel_list(name, carousel_list, debug=False):
@@ -51,9 +65,7 @@ def check_promo_list(name, promo_list, debug=False):
             print(f" {name}[{i}] type={item_type}; id={item_id}; img={item_img_src}")
 
 
-def test_title_url_search_more(page: Page) -> None:
-    # Given the DishAnyWhere home page is displayed
-    dish_base_url = 'https://www.dishanywhere.com/'
+def given_dish_home(page: Page) -> None:
     page.set_viewport_size({"width": 1280, "height": 960})
     page.goto(dish_base_url)
     # Then web page title is 'DISH Anywhere'
@@ -66,56 +78,107 @@ def test_title_url_search_more(page: Page) -> None:
     # browser firefox and webkit normally redirect after, so need to wait
     page.wait_for_url(dish_base_url + "home")
 
+
+def test_title_url_search(
+        page: Page
+    ) -> None:
+    # Given the DishAnyWhere home page is displayed
+    given_dish_home(page)
+
     # When Search 'cbs'
-    search = page.locator("#search-icon")
+    search = page.locator("img#search-icon")
     search.click()
-    page.fill("#search-input", 'cbs')
+    page.fill("input#search-input", 'cbs')
 
     # Then find "CBS sports network"
     id_attr = 'cbs_sports_network_1220-search-link'
     text = "CBS Sports Network"
-    find = page.locator("#" + id_attr)
+    results = page.locator('div#search-results-container')
+    find = results.locator("a#" + id_attr)
     expect(find).to_have_text(text)
 
     # Then close the search
-    close = page.locator("#close-icon")
+    close = page.locator("svg#close-icon")
     close.click()
+    pass
 
-    # Then web page version is "24.3.6"
-    copy_version = page.locator("#footer-copyright-text")
-    year = "2024"
+
+def test_copyright(
+        page: Page, 
+        api_request_context: APIRequestContext
+    ) -> None: 
+    # Given the DishAnyWhere home page is displayed
+    given_dish_home(page)
+
+    # Then web page copryright, version is via current year, API config's branch
+    year = str(datetime.now().year)
+    
+    config_url = "health/config_check"
+    response = api_request_context.get(config_url, params=None, headers=None)
+    assert response.ok
+    config_env = response.json().get('env')
+    config_branch = response.json().get('git').get('branch')
+    print(f"Dish Config env: {config_env}; branch: {config_branch}")
+    assert config_env == "production"
+    
+    version = config_branch.replace("-",".")
+    copy_version = page.locator("span#footer-copyright-text")
+    
     rights = " DISH Network L.L.C. All rights reserved. Version "
-    version_text = "24.3.6"
-    expect(copy_version).to_have_text("©" + year + rights + version_text)
+    expect(copy_version).to_have_text("©" + year + rights + version)
+    pass
 
-    # Then Web page Carousel 'Most Popular' matches API 'Most Popular'
-    most_carousel = page.locator("#carousel-item").nth(0)
-    title_carousel = most_carousel.locator("#carousel-title")
+
+def test_Most_Pop_title_count(
+        page: Page
+    ) -> None: 
+
+    # Given the DishAnyWhere home page is displayed
+    given_dish_home(page)
+
+    # Then Web page Carousel 'Most Popular' exists with at least 1 element
+    most_carousel = page.locator("div#carousel-item").nth(0)
+    title_carousel = most_carousel.locator("span#carousel-title")
     expect(title_carousel).to_have_text('Most Popular')
-    most_list = most_carousel.locator("#card-container")
-    # most_list.count() matches API Most Popular list count
+    most_list = most_carousel.locator("div#card-container")
     assert most_list.count() > 0
     check_carousel_list("most", most_list, False)
     # assert most_list.count() <= 0, "fake Failure - really passed"
+    pass
 
-    # Then Web page Carousel 'Available Now and Promos'
-    #      matches API 'Available Now' and API 'Promos'
-    avail_promos_carousel = page.locator("#carousel-item").nth(1)
-    title_carousel = avail_promos_carousel.locator("#carousel-title")
+
+def test_Avail_Now_title_count(
+        page: Page
+    ) -> None: 
+
+    # Given the DishAnyWhere home page is displayed
+    given_dish_home(page)
+
+    # Then Web page Carousel 'Available Now' exists with at least 1 element
+    avail_promos_carousel = page.locator("div#carousel-item").nth(1)
+    title_carousel = avail_promos_carousel.locator("span#carousel-title")
     expect(title_carousel).to_have_text('Available Now')
-
-    avail_list = avail_promos_carousel.locator("div").nth(0).locator("#card-container")
-    # avail_list.count() matches API "Available Now" list count
+    avail_list = avail_promos_carousel.locator("div").nth(0).locator("div#card-container")
     assert avail_list.count() > 0
     check_carousel_list("aval", avail_list, False)
     # assert avail_list.count() <= 0, "fake Failure - really passed"
+    pass
 
-    # promo_carousel = avail_promos_carousel.locator(".carousel").nth(1)
-    promo_carousel = page.locator(".carousel").nth(2)
-    promo_list = promo_carousel.locator("#banner-card")
-    # promo_list.count() matches API "Promos" list
+
+def test_Promos_only_count(
+        page: Page
+    ) -> None: 
+
+    # Given the DishAnyWhere home page is displayed
+    given_dish_home(page)
+
+    # Then Web page Carousel 'Promos' exists with at least 1 element
+    avail_promos_carousel = page.locator('div#carousel-item').nth(1);
+    promo_carousel = avail_promos_carousel.locator('div.carousel').nth(1);
+    promo_list = promo_carousel.locator("a#banner-card")
+    promo_list.nth(0).hover()
+    # promo_list.count() has at least one element
     assert promo_list.count() > 0
     check_promo_list("promo", promo_list, True)
     # assert promo_list.count() <= 0, "fake Failure - really passed"
-
     pass

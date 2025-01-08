@@ -1,20 +1,17 @@
 import pytest
 from playwright.sync_api import Page, APIRequestContext
 from tests.Models.dishanyweb import DishPage
+# import fixure 'api_request_context'
 from tests.Models.dishanyapi import DishAPI, api_request_context
+from tests.part_2_models.help_dish_web_methods import given_dish_home
 
 
 def test_avail_now_list(page: Page, api_request_context: APIRequestContext) -> None:
     # Given the DishAnyWhere home page is displayed
 
+    # Given the DishAnyWhere home page is displayed
     dish_home = DishPage(page)
-    dish_home.navigate()
-
-    # Then Dish web page has its title
-    dish_home.check_dish_title()
-
-    # Then Dish web page url has ../home
-    dish_home.check_dish_url_home()
+    given_dish_home(dish_home)
 
     # get Dish API Most Pop list
     api_avail_now_list = DishAPI().get_api_avail_now(api_request_context, False)

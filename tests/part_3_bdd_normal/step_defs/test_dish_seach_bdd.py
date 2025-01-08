@@ -1,8 +1,10 @@
 import pytest
 from pytest_bdd import scenarios, given, when, then
-from playwright.sync_api import Page
-from tests.Models.dishanyweb import DishPage
+from playwright.sync_api import Page, APIRequestContext
+# import fixure 'web_request_context'
+from tests.Models.dishanyweb import DishPage, web_request_context
 from tests.part_3_bdd_normal.step_defs.common_steps import navigate_to_dish_home_search
+from datetime import datetime
 
 scenarios('../features/dish_home_search.feature')
 
@@ -30,8 +32,13 @@ def close_search(page: Page):
     DishPage(page).close_search()
 
 
-@then('Displays copyright and deployed version')
-def display_copyright_version(page: Page):
-    year = 2024
-    version = "24.3.6"
-    DishPage(page).check_copyright_version(year, version)
+@then('Displays config copyright version')
+def display_copyright_version(
+    page: Page,
+    web_request_context: APIRequestContext
+):
+    year = str(datetime.now().year)
+    dish_home = DishPage(page)
+    dish_home.set_config_env_version(web_request_context, True)
+    version = dish_home.get_config_version()
+    dish_home.check_copyright_version(year, version)
