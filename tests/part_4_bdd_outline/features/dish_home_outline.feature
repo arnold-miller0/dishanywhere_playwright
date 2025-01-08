@@ -3,7 +3,7 @@ Feature: DishAnyWhere home outlines
 
   Scenario: Scenario: DishAnyWhere copyright version
     Given On DishAnyWhere Home size "1280" x "960"
-    Then Displays copyright "2024" and version "24.3.5"
+    Then Displays config copyright version
 
 
   Scenario Outline: DishAnyWhere Search networks

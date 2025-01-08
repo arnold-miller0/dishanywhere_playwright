@@ -2,7 +2,7 @@ Feature: DishAnyWhere home search example
 
   Scenario: DishAnyWhere copyright version
     Given On DishAnyWhere Home page
-    Then Displays copyright and deployed version
+    Then Displays config copyright version
 
 
   Scenario: DishAnyWhere search cbs

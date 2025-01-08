@@ -4,7 +4,6 @@ from playwright.sync_api import Page, APIRequestContext
 from tests.Models.dishanyweb import DishPage
 from tests.Models.dishanyapi import DishAPI, api_request_context
 
-
 @pytest.fixture(scope="function")
 def dish_api(api_request_context: APIRequestContext):
     return DishAPI()

@@ -1,7 +1,8 @@
 import pytest
-from playwright.sync_api import APIRequestContext
+from typing import Generator
+from playwright.sync_api import Playwright, APIRequestContext
+# import fixure 'api_request_context'
 from tests.Models.dishanyapi import DishAPI, api_request_context
-
 
 def test_get_api_most_pop(api_request_context: APIRequestContext) -> None:
     most_items = DishAPI().get_api_most_pop(api_request_context)
