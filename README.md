@@ -59,7 +59,7 @@
   - winOS11: `python -m pytest .\tests\part_4_bdd_outline\step_defs\`
      - html: `python -m pytest .\tests\part_4_bdd_outline\ --html=reports/part_4_report.html`
      - brow: `python -m pytest .\tests\part_4_bdd_outline\ --headed --browser webkit`
-- Execute all tests, parallel 4, display browser, html reports
+- Execute all tests, parallel 4, display browser, html report
   - winOS11: `python -m pytest .\tests -n 4 --headed --html=reports/all_p4_report.html`
-  
+
 ## DONE
