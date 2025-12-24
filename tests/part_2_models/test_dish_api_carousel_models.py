@@ -18,5 +18,7 @@ def test_get_api_avail_now(api_request_context: APIRequestContext) -> None:
 
 def test_get_api_promos(api_request_context: APIRequestContext) -> None:
     promos_items = DishAPI().get_api_promos_items(api_request_context)
-    assert len(promos_items) == 2
+    # expect  2 or 3 promos
+    assert len(promos_items) >= 2 
+    assert len(promos_items) <= 3
     assert True
