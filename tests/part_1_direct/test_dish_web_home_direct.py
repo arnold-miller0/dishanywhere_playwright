@@ -121,7 +121,11 @@ def test_copyright(
     print(f"Dish Config env: {config_env}; branch: {config_branch}")
     assert config_env == "production"
     
-    version = config_branch.replace("-",".")
+    array = config_branch.split("-")
+    # API branch version format = 'yy-q-s' for year, quarter, sprint
+    #       with optional '-p' for patch
+    #   Web release version is only 'yy.q.s' so need to ignore optional '-p'
+    version = array[0] + '.' + array[1] + '.' + array[2]
     copy_version = page.locator("span#footer-copyright-text")
     
     rights = " DISH Network L.L.C. All rights reserved. Version "

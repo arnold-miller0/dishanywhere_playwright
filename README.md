@@ -5,33 +5,41 @@
 - update locators to have tags not just via id, class, attributes
 - Models and BDD tests check copyright and version via API response
 
-**Python version 3.12.4**
+**Python version Python 3.14.2 on Win11 OS**
 ## Requires to install 
 ### Given installed python and pip
-- `python 3.12.4`
-- `pip 24.3.1`
+- `python --version` results `Python 3.14.2`
+- `python -m pip --version ` results `pip 25.3`
 ### upgrade pip
-- `pip install --upgrade pip`
+- `python -m pip install --upgrade pip`
 ### install pytest
-- `pip install pytest`
+- `python -m pip install pytest`
 ### install pytest_bdd (cucumber)
-- `pip install pytest_bdd`
+- `python -m pip install pytest_bdd`
 ### install pytest-xdist (parallel)
-- `pip install pytest-xdist`
+- `python -m pip install pytest-xdist`
 - pytest option 
   - max parallel ` -n auto`
   - 4 parallel ` -n 4`
 ### install pytest-html (reports)
-- `pip install pytest-html`
+- `python -m pip install pytest-html`
 - pytest option ` --html=reports/result.html`
 ### install playwright
-- `pip install playwright`
-- `playwright install`
+- `python -m pip install playwright`
+- `python -m playwright install`
 - diplay browser option `--headed`
 - select browser option 
   - ` --browser firefox`
   - ` --browser chromium`
   - ` --browser webkit`
+### display pip installed package versions 
+    via 24 Dec 2025
+- `python -m pip list`
+  - `pip                25.3`
+  - `playwright         1.56.0`
+  - `pytest             9.0.2`
+  - `pytest-bdd         8.1.0`
+  - `pytest-html        4.1.1`
 
 
 ## Checks DishAnyWhere home via Playwright python-pytest

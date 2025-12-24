@@ -94,7 +94,12 @@ class DishPage:
         dataJson = response.json()
         self._cfg_env = dataJson.get('env')
         branchJson = dataJson.get('git').get('branch')
-        self._cfg_ver = branchJson.replace("-",".")
+         # API branch version format = 'yy-q-s' for year, quarter, sprint
+        #       with optional '-p' for patch
+        #   Web release version is only 'yy.q.s' so need to ignore optional '-p'
+        array = branchJson.split("-")
+        self._cfg_ver = array[0] + '.' + array[1] + '.' + array[2]
+        # self._cfg_ver = branchJson.replace("-",".")
         if debug:
             print(f" web Config env: {self._cfg_env}; version: {self._cfg_ver}")
     
