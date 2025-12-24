@@ -25,7 +25,7 @@ Feature: DishAnyWhere home outlines
     Then Dish Home "<name>" List Matches API
     Examples:
       | name      | width | height | comment
-      | other     | 1800  | 700    | not found Carousel
+      | other     | 1800  | 700    | not found Carousel expect Fail
       | avail now | 1700  | 800    | Available Now Carousel
       | most pop  | 1600  | 900    | Moet Popular Carousel
       | promos    | 1500  | 1000   | Promotional List

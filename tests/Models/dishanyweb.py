@@ -80,7 +80,7 @@ class DishPage:
         return self.get_web_avail_carousel().locator("div").nth(0).locator("div#card-container")
 
     def get_web_promos_list(self) -> Locator:
-        return self._promos_list.locator("#banner-card")
+        return self._promos_list.locator("a#banner-card")
 
 
     def set_config_env_version(self,
@@ -133,7 +133,7 @@ class DishPage:
     def _check_carousel_title(self,
                               carousel: Locator,
                               title: str):
-        title_carousel = carousel.locator("#carousel-title")
+        title_carousel = carousel.locator("span#carousel-title")
         expect(title_carousel).to_have_text(title)
 
     def check_avail_carousel_title(self):

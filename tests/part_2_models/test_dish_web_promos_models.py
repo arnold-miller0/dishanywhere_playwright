@@ -15,18 +15,18 @@ def test_promos_list(page: Page, api_request_context: APIRequestContext) -> None
     # delay wait for api avail now list response just like browser api request sequence
     DishAPI().get_api_avail_now(api_request_context)
     # get Dish API Promos list
-    api_promos_list = DishAPI().get_api_promos_items(api_request_context)
+    api_promos_list = DishAPI().get_api_promos_items(api_request_context, False)
 
     # Then Web page Carousel 'Promos' matches API 'Promos'
     web_promos_list = dish_home.get_web_promos_list()
 
-    dish_home.check_item_list_count("mod promo", web_promos_list, len(api_promos_list))
+    dish_home.check_item_list_count("mod promo", web_promos_list, len(api_promos_list), False)
 
     # And there is at least 1 'Promos'
     assert web_promos_list.count() > 0
     # promos_list.count() matches API "Promos" list count
     assert web_promos_list.count() == len(api_promos_list)
-    dish_home.check_promo_list("mod promo", web_promos_list, api_promos_list, False)
+    dish_home.check_promo_list("mod promo", web_promos_list, api_promos_list, True)
     # assert False
 
     pass

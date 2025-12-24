@@ -1,7 +1,7 @@
 # dishanywhere_playwright
 
 
-### TODO via similar typescript repo
+### Done via similar typescript repo
 - update locators to have tags not just via id, class, attributes
 - Models and BDD tests check copyright and version via API response
 
@@ -32,9 +32,8 @@
   - ` --browser firefox`
   - ` --browser chromium`
   - ` --browser webkit`
-### display pip installed package versions 
-    via 24 Dec 2025
-- `python -m pip list`
+### display pip installed package versions
+- via 24 Dec 2025 `python -m pip list` 
   - `pip                25.3`
   - `playwright         1.56.0`
   - `pytest             9.0.2`
@@ -54,7 +53,7 @@
   - winOS11: `python -m pytest .\tests\part_1_direct\`
      - html: `python -m pytest .\tests\part_1_direct\ --html=reports/part_1_report.html`
      - head: `python -m pytest .\tests\part_1_direct\ --headed`
-     - para: `python -m pytest .\tests\part_1_direct\ -n 4`
+     - para: `python -m pytest .\tests\part_1_direct\ -n 3`
 - Part 2: Use Web page, Web carousel and API Models
   - winOS11: `python -m pytest .\tests\part_2_models\`
      - html: `python -m pytest .\tests\part_2_models\ --html=reports/part_2_report.html`
@@ -68,6 +67,6 @@
      - html: `python -m pytest .\tests\part_4_bdd_outline\ --html=reports/part_4_report.html`
      - brow: `python -m pytest .\tests\part_4_bdd_outline\ --headed --browser webkit`
 - Execute all tests, parallel 4, display browser, html report
-  - winOS11: `python -m pytest .\tests -n 4 --headed --html=reports/all_p4_report.html`
+  - winOS11: `python -m pytest .\tests -n 3 --headed --html=reports/all_p4_report.html`
 
 ## DONE
